@@ -1,27 +1,22 @@
 package org.palina.reports.dto;
 
+import groovy.sql.Sql;
 
 public class ReporteDto {
 
-	private boolean validado;
 	private String  ruta;
-	public boolean isValidado() {
-		return validado;
-	}
-	public void setValidado(boolean validado) {
-		this.validado = validado;
-	}
+	private Sql conn;
+		
 	public String getRuta() {
 		return ruta;
 	}
 	public void setRuta(String ruta) {
 		this.ruta = ruta;
 	}
-	
-	
-	
-	
-	
-	
-	
+	public Sql getConn() {
+		return conn;
+	}
+	public void setConn(Sql conn) {
+		this.conn = conn;
+	}
 }

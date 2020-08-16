@@ -1,5 +1,6 @@
 package org.palina.reports;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -7,11 +8,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.File;
@@ -22,6 +25,7 @@ import org.palina.reports.service.ConnectioService;
 import org.palina.reports.service.ReportsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
@@ -89,6 +93,7 @@ class ReportsApplication extends JFrame {
 		        	  Sql conn = connectionService.getConnection(item);
 		        	  
 		        	  if(conn!= null) {
+		        		  reporte.setConn(conn);
 		        		  JOptionPane.showMessageDialog(this, "Conexion establecida con " + item, "Estatus conexión", JOptionPane.INFORMATION_MESSAGE);
 		        	  }else {
 		        		  JOptionPane.showMessageDialog(this, "No se puedo conectar a " + item, "Estatus conexión", JOptionPane.ERROR_MESSAGE);
@@ -99,8 +104,16 @@ class ReportsApplication extends JFrame {
 	    });
 		
 		JPanel jPanelFile = new JPanel();
+		jPanelFile.setLayout(new BoxLayout(jPanelFile, BoxLayout.X_AXIS));
 		JButton btnChooseFile = new JButton("Seleccionar reporte");
 		jPanelFile.add(btnChooseFile);
+		JTextField campo1 = new JTextField();
+		JTextField campo2 = new JTextField();
+		JTextField campo3 = new JTextField();
+		
+		jPanelFile.add(campo1);
+		jPanelFile.add(campo2);
+		jPanelFile.add(campo3);
 		
 		btnChooseFile.addActionListener((ActionEvent event) -> {
 			String path = FileSystemView.getFileSystemView().getHomeDirectory() + "/reports";
@@ -124,16 +137,29 @@ class ReportsApplication extends JFrame {
 		
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				File selectedFile = jfc.getSelectedFile();
-				reporte.setRuta(selectedFile.getAbsolutePath());				
+				reporte.setRuta(selectedFile.getAbsolutePath());	
+				
+				
+				
+				jPanelFile.repaint();
 			}
 
 		});
 		
 		
+		JPanel jPanelQuery = new JPanel();
+		
+		JButton btnGenerar = new JButton("Generar reporte");
+		btnGenerar.addActionListener((ActionEvent event) -> {
+			 System.out.println("Generar reporte");
+	      });
+		jPanelQuery.add(btnGenerar);
+		
+		
 		pane.setLayout(new BorderLayout());
         this.add(jPanelComboDb,BorderLayout.NORTH);		
         this.add(jPanelFile, BorderLayout.CENTER);
-		
+		this.add(jPanelQuery, BorderLayout.SOUTH);
 		
 		
 		}
