@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReportsServiceImpl implements ReportsService {
 
+	
+	
 	void executeReport(Connection conn, String query) {
 		query = "select * from istcard where pan = ? and statsu = ?";
 		

@@ -5,6 +5,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileSystemView;
 
@@ -17,11 +18,14 @@ import java.io.File;
 
 import org.palina.reports.ReportsApplication;
 import org.palina.reports.dto.ReporteDto;
+import org.palina.reports.service.ConnectioService;
 import org.palina.reports.service.ReportsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
+
+import groovy.sql.Sql;
 
 @SpringBootApplication
 class ReportsApplication extends JFrame {
@@ -33,16 +37,18 @@ class ReportsApplication extends JFrame {
 	
 	
 	private ReportsService reportsService; 
+	private ConnectioService connectionService;
 	private ReporteDto reporte;
 
 	@Autowired	
-	public ReportsApplication(ReportsService reportsService) {
+	public ReportsApplication(ReportsService reportsService, ConnectioService connectionService) {
 		this.reportsService   = reportsService;		
-		this.reporte = new ReporteDto();
-		initUI(this.reportsService, reporte);
+		this.connectionService = connectionService;
+		this.reporte = new ReporteDto();				
+		initUI(this.reportsService, connectionService, reporte);
 	}
 
-	private void initUI(final ReportsService reportsService, ReporteDto reporte) {
+	private void initUI(final ReportsService reportsService, final ConnectioService connectioService,ReporteDto reporte) {
 		JButton quitButton = new JButton("Quit");
 		ReportsService rs = reportsService;
 		
@@ -80,9 +86,15 @@ class ReportsApplication extends JFrame {
 		          String item = (String) event.getItem();
 		          if(!item.equals("Seleccionar")) {
 		        	  btnTestDb.setVisible(true);
-		          }else {
-		        	  btnTestDb.setVisible(false);
-		          }		          
+		        	  Sql conn = connectionService.getConnection(item);
+		        	  
+		        	  if(conn!= null) {
+		        		  JOptionPane.showMessageDialog(this, "Conexion establecida con " + item, "Estatus conexión", JOptionPane.INFORMATION_MESSAGE);
+		        	  }else {
+		        		  JOptionPane.showMessageDialog(this, "No se puedo conectar a " + item, "Estatus conexión", JOptionPane.ERROR_MESSAGE);
+		        	  }
+		        	  
+		          }	          
 			}
 	    });
 		
