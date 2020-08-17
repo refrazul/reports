@@ -1,17 +1,21 @@
 package org.palina.reports.dto;
 
+import java.util.Map;
+
 import groovy.sql.Sql;
 
 public class ReporteDto {
 
-	private String  ruta;
+	private String  query;
 	private Sql conn;
+	private Map<String,Object> params;
 		
-	public String getRuta() {
-		return ruta;
+
+	public String getQuery() {
+		return query;
 	}
-	public void setRuta(String ruta) {
-		this.ruta = ruta;
+	public void setQuery(String query) {
+		this.query = query;
 	}
 	public Sql getConn() {
 		return conn;
@@ -19,4 +23,11 @@ public class ReporteDto {
 	public void setConn(Sql conn) {
 		this.conn = conn;
 	}
+	public Map<String, Object> getParams() {
+		return params;
+	}
+	public void setParams(Map<String, Object> params) {
+		this.params = params;
+	}
+	
 }

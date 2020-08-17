@@ -27,8 +27,8 @@ dependencies {
 	implementation 'org.codehaus.groovy:groovy-yaml:3.0.5'
 	implementation 'org.codehaus.groovy:groovy-sql:3.0.5'
 	
-	//implementation  'org.yaml:snakeyaml:1.17'
-	
+	//Query traslator
+	implementation 'org.jooq:jooq:3.13.4'	
 	
 	
 	

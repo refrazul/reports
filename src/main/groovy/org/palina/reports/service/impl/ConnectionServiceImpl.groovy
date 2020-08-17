@@ -1,7 +1,13 @@
 package org.palina.reports.service.impl
 
 import groovy.sql.Sql
-
+import org.jooq.DSLContext
+import org.jooq.Parser
+import org.jooq.Query
+import org.jooq.conf.ParamType
+import org.jooq.conf.Settings
+import org.jooq.impl.DSL
+import org.jooq.impl.DefaultConfiguration
 import org.palina.reports.dto.ConnectionDto
 import org.palina.reports.service.ConnectioService
 import org.springframework.stereotype.Service
@@ -45,5 +51,30 @@ class ConnectionServiceImpl implements ConnectioService {
 		}
 				
 		return sql
+	}
+
+
+	public String getQuery(String path) {
+		return new File(path).text		
+	}
+	
+	public Map<String,Object> getParams(String queryStr) {
+		def qryParamNames=[:]
+		
+		DSLContext ctx = DSL.using(
+			new DefaultConfiguration().set(
+				new Settings().withParamType(ParamType.NAMED_OR_INLINED)));
+
+		Parser parser = ctx.parser();
+		Query query = parser.parseQuery(queryStr);
+
+		query.params.each { k, v ->
+				println k 
+				qryParamNames.put(k, k)
+		}
+		
+		println qryParamNames
+		
+		return qryParamNames
 	}
 }
