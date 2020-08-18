@@ -17,11 +17,21 @@ class ReportsServiceImpl implements ReportsService{
 			paramas.put(k.toLowerCase(), new String(v))
 		}
 		
-		def result = request?.conn.rows(request?.query?.toLowerCase(), paramas)
+		def result = request?.conn.rows(request?.query?.toLowerCase(), paramas)		
 		
-		result.each{
-			println it
-		}
-		
+		generateCSV(request.file, result)
 	}
+	
+	private void generateCSV(String file, def result) {
+		def f = new File(file)
+		
+		result.each{ 
+			it.each{ k,v ->
+				f << v << ","
+			}
+			f << "\n"
+		}
+				
+	}
+	
 }

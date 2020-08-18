@@ -9,7 +9,8 @@ public class ReporteDto {
 	private String  query;
 	private Sql conn;
 	private Map<String,Object> params;
-		
+	private String type;
+	private String file;
 
 	public String getQuery() {
 		return query;
@@ -28,6 +29,18 @@ public class ReporteDto {
 	}
 	public void setParams(Map<String, Object> params) {
 		this.params = params;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getFile() {
+		return file;
+	}
+	public void setFile(String file) {
+		this.file = file;
 	}
 	
 }

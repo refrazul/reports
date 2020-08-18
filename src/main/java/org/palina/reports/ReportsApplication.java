@@ -59,64 +59,86 @@ class ReportsApplication extends JFrame {
 
 	private void initUI(final ReportsService reportsService, final ConnectioService connectioService,ReporteDto reporte) {
 		String s1[] = { "Seleccionar" , "DB Provedores", "DB Clientes", "DB Transacciones"};
+		String s2[] = { "CSV" , "Excel"};
 		
 		Container pane = getContentPane();		
 		GridBagLayout gridbag = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         pane.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        pane.setLayout(gridbag);
+        pane.setLayout(gridbag);        
         
         c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1.0;
+        c.gridx = 0;
+        c.weightx = 4;
         JLabel lblSelectDb = new JLabel("Selecciona base de datos");        
         gridbag.setConstraints(lblSelectDb, c);
         add(lblSelectDb);
         
-  
+        c.gridx = 1;
+        c.weightx = 0.0;
         JComboBox<String> comboBases = new JComboBox<String>(s1); 
         gridbag.setConstraints(comboBases, c);
         add(comboBases);
         
-        c.gridwidth = GridBagConstraints.REMAINDER; //end row      
-        c.weightx = 0.0;  
+        c.gridx = 2;                
         JButton btnSeleccionar = new JButton("Seleccionar Reporte");
         gridbag.setConstraints(btnSeleccionar, c);
         add(btnSeleccionar);
         
-        c.gridwidth = 0;                
+        
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;        
+        JLabel lblSelectType = new JLabel("Tipo reporte");        
+        gridbag.setConstraints(lblSelectType, c);
+        add(lblSelectType);
+        
+  
+        c.gridx = 1;
+        c.gridy = 1;
+        JComboBox<String> comboReportes = new JComboBox<String>(s2); 
+        gridbag.setConstraints(comboReportes, c);
+        add(comboReportes);
+        
+        
+        c.fill = GridBagConstraints.BOTH;
+        c.gridy = 2; 
+        c.gridx = 0;
+        c.gridwidth = 3;      
         c.gridheight = 2;
-        c.weighty = 1.0; 
         JTextArea txtQuery = new JTextArea("La consulta");
         txtQuery.setEditable(false);
         gridbag.setConstraints(txtQuery, c);
         add(txtQuery);
- 
-        c.gridwidth = GridBagConstraints.REMAINDER; //end row      
-        c.weightx = 0.0;  
+        
+        c.gridy = 4; 
+        c.gridx = 0;
+        c.gridwidth = 3;                 
         JLabel lblParametros = new JLabel("Parametros");
         gridbag.setConstraints(lblParametros, c);
         add(lblParametros);
         
-        c.gridwidth = GridBagConstraints.REMAINDER; //end row      
-        c.weightx = 0.0;  
+
+        c.gridy = 6; 
+        c.gridx = 0;
+        c.gridwidth = 3;                 
 		JPanel panel = new JPanel();
 		gridbag.setConstraints(panel, c);
 		add(panel);
         
-        c.gridwidth = GridBagConstraints.REMAINDER; //end row      
-        c.weightx = 0.0;  
-        c.weighty = 0.0;
+		
+		c.gridy = 16; 
+        c.gridx = 1;
+        c.gridwidth = 1;     
         JButton btnGenerar  = new JButton("Generar Reporte");
         gridbag.setConstraints(btnGenerar, c);
         add(btnGenerar);
-        
+		
 		setTitle("Reporteador");
 		setSize(500, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		
-	
 		
 		
 		/**Action select DB **/
@@ -188,20 +210,49 @@ class ReportsApplication extends JFrame {
 		
 		/** Action generate report **/
 		btnGenerar.addActionListener((ActionEvent event) -> {
-			 System.out.println("Generar reporte");
-			 Map<String,Object> params = new HashMap<String,Object>();
-			 
+			if(reporte.getConn() == null) {
+				message("Debse serleccionar una conexión", JOptionPane.ERROR_MESSAGE );
+			}else if(reporte.getQuery() == null) {
+				message("Debse serleccionar el reporte a ejecutar", JOptionPane.ERROR_MESSAGE );
+			}
+			
+			Map<String,Object> params = new HashMap<String,Object>();
+			boolean generar = true;
+			
 		       for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
-		    	   params.put(entry.getKey(), entry.getValue().getText());		    	 
+		    	   if(entry.getValue().getText().length() == 0) {
+		    		   message("Ingrese el valor del parametro " + entry.getKey()  , JOptionPane.ERROR_MESSAGE );
+		    		   generar = false;
+		    		   break;
+		    	   }
+		    	   params.put(entry.getKey(), entry.getValue().getText());
 		       }
 		        	
-		     reporte.setParams(params);			 
-			 reportsService.generateReport(reporte);
-			 
+		       if(generar) {
+		    	   String path = FileSystemView.getFileSystemView().getHomeDirectory() + "/reports/output";
+		    	   JFileChooser jfc = new JFileChooser(path);
+		    	   jfc.setDialogTitle("Guardar reporte");   
+		    	   
+		    	   int userSelection = jfc.showSaveDialog(this);
+		    	   
+		    	   if (userSelection == JFileChooser.APPROVE_OPTION) {
+		    		   File fileToSave = jfc.getSelectedFile();
+		    		   reporte.setParams(params);
+		    		   reporte.setType((String)comboReportes.getSelectedItem());
+		    		   reporte.setFile(fileToSave.getAbsolutePath());
+		    		   reportsService.generateReport(reporte);
+		    		}
+		    	   
+				   
+		       }		    	   
 	      });
 		
 	}
 	
+	
+	private void message(String msg, int type) {
+		JOptionPane.showMessageDialog(this, msg, "Message", type);
+	}
 	
 	public static void main(String[] args) {
 
