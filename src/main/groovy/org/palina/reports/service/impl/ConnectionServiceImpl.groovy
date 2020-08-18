@@ -58,8 +58,8 @@ class ConnectionServiceImpl implements ConnectioService {
 		return new File(path).text		
 	}
 	
-	public Map<String,Object> getParams(String queryStr) {
-		def qryParamNames=[:]
+	public List<String> getParams(String queryStr) {
+		def qryParamNames=[]
 		
 		DSLContext ctx = DSL.using(
 			new DefaultConfiguration().set(
@@ -69,8 +69,7 @@ class ConnectionServiceImpl implements ConnectioService {
 		Query query = parser.parseQuery(queryStr);
 
 		query.params.each { k, v ->
-				println k 
-				qryParamNames.put(k, k)
+			qryParamNames << k
 		}
 		
 		println qryParamNames

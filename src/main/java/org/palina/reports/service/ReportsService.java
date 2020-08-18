@@ -1,12 +1,9 @@
 package org.palina.reports.service;
 
-public interface ReportsService {
+import org.palina.reports.dto.ReporteDto;
 
-	/**
-	 * Extrae el numero de parametros de un query a ejecutar
-	 * @param query
-	 * @return
-	 */
-	long readQueryParams(String query);
+
+public interface ReportsService {
 	
+	void generateReport(ReporteDto request);
 }
