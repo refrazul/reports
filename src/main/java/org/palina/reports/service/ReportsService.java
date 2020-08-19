@@ -1,9 +1,10 @@
 package org.palina.reports.service;
 
 import org.palina.reports.dto.ReporteDto;
+import org.palina.reports.enums.ResponseReportEnum;
 
 
 public interface ReportsService {
 	
-	void generateReport(ReporteDto request);
+	ResponseReportEnum generateReport(ReporteDto request);
 }

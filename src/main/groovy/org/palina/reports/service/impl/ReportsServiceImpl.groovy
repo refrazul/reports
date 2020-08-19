@@ -3,6 +3,7 @@ package org.palina.reports.service.impl
 import groovy.sql.Sql
 
 import org.palina.reports.dto.ReporteDto
+import org.palina.reports.enums.ResponseReportEnum
 import org.palina.reports.service.ReportsService
 import org.springframework.stereotype.Service
 
@@ -14,22 +15,39 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 @Service
 class ReportsServiceImpl implements ReportsService{
 
-	public void generateReport(ReporteDto request) {
+	public ResponseReportEnum generateReport(ReporteDto request) {
+		ResponseReportEnum response = ResponseReportEnum.REPORTE_GENRADO
+		
 		def paramas = [:]
 
 		request.params.each{ k,v ->
 			paramas.put(k.toLowerCase(), new String(v))
 		}
 
-		def result = request?.conn.rows(request?.query?.toLowerCase(), paramas)
-
-		if(request?.type.equals("CSV")) 
-			generateCSV(request.file, result)
-		else if(request?.type.equals("Excel"))
-			generateExcel(request.file, result)
+		def result
+		try {
+			result = request?.conn.rows(request?.query?.toLowerCase(), paramas)
+		}catch(Exception e){
+			response = ResponseReportEnum.ERROR_AL_EJECUTAR_CONSULTA
+		}
+		
+		
+		if(result.empty) {
+			response = ResponseReportEnum.NO_SE_ENCONTRARON_REGISTROS
+		}else {
+			try {
+				if(request?.type.equals("CSV"))
+					generateCSV(request.file, result)
+				else if(request?.type.equals("Excel"))
+					generateExcel(request.file, result)
+			}catch(Exception e) {
+				response = ResponseReportEnum.ERROR_AL_ESCRIBIR_REPORTE
+			}					
+		}
+		return response
 	}
 
-	private void generateCSV(String file, def result) {
+	private void generateCSV(String file, def result) throws Exception {
 		def f = new File(file)
 
 		result.each{
@@ -40,7 +58,7 @@ class ReportsServiceImpl implements ReportsService{
 		}
 	}
 
-	private void generateExcel(String file, def result) {
+	private void generateExcel(String file, def result)  throws Exception {
 		SXSSFWorkbook workBook = new SXSSFWorkbook();
 		workBook.setCompressTempFiles(true);
 

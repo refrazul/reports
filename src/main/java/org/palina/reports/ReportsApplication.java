@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.palina.reports.ReportsApplication;
 import org.palina.reports.dto.ReporteDto;
+import org.palina.reports.enums.ResponseReportEnum;
 import org.palina.reports.service.ConnectioService;
 import org.palina.reports.service.ReportsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,9 +262,14 @@ class ReportsApplication extends JFrame {
 			    		   reporte.setType((String)comboReportes.getSelectedItem());
 			    		   reporte.setFile(fileToSave.getAbsolutePath());
 			    		   		    		
-			    		   reportsService.generateReport(reporte);
-			    		   lblMsg.setText("Reporte generado");
+			    		   ResponseReportEnum res = reportsService.generateReport(reporte);
+			    		   if(res==ResponseReportEnum.REPORTE_GENRADO)
+			    			   message("Reporte Generado", "Reporte", JOptionPane.INFORMATION_MESSAGE);
+			    		   else {
+			    			   message("Ocurrio un error el generar el reporte", "Reporte", JOptionPane.INFORMATION_MESSAGE);
+			    		   }
 			    		   
+			    		   lblMsg.setText(res.toString());
 			    		   Thread thread = new Thread(runnable);
 			    		   thread.start();		    		   
 			    		}			    	   					   
