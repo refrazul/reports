@@ -4,6 +4,11 @@ import java.util.Map;
 
 import groovy.sql.Sql;
 
+/**
+ * Contiene los parametros para un reporte
+ * @author refrazul
+ *
+ */
 public class ReporteDto {
 
 	private String  query;

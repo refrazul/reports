@@ -22,16 +22,22 @@ class ConnectionServiceImpl implements ConnectioService {
 	Logger logger = LoggerFactory.getLogger(ConnectionServiceImpl.class);
 	private def yaml
 	
+	
 	public ConnectionServiceImpl(String path) {
 		def yamlSlurper = new YamlSlurper()
 		yaml = yamlSlurper.parseText((path as File).text)
 	}
+	
 	
 	public ConnectionServiceImpl() {
 		def yamlSlurper = new YamlSlurper()
 		yaml = yamlSlurper.parseText(("/home/refrazul/reports/connections.yml" as File).text)		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String[] getConnectionsNames() {
 		def l1 = ["Seleccionar"]
 		def l2 = yaml.connections.list.collect {
@@ -41,7 +47,10 @@ class ConnectionServiceImpl implements ConnectioService {
 		return (l1+l2) as String[]		
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Sql getConnection(String connectionName) {
 		def db 
 		def sql 
@@ -69,11 +78,18 @@ class ConnectionServiceImpl implements ConnectioService {
 		return sql
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getQuery(String path) {
 		return new File(path).text		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<String> getParams(String queryStr) {
 		def qryParamNames=[]
 		

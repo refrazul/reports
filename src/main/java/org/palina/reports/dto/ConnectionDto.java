@@ -1,5 +1,10 @@
 package org.palina.reports.dto;
 
+/**
+ * Objeto utilizado para generar una conexion Sql
+ * @author refrazul
+ *
+ */
 public class ConnectionDto {
 
 	private String url;

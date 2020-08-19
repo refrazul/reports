@@ -19,6 +19,10 @@ class ReportsServiceImpl implements ReportsService{
 
 	Logger logger = LoggerFactory.getLogger(ReportsServiceImpl.class);
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public ResponseReportEnum generateReport(ReporteDto request) {
 		logger.info("Ejecutando reporte" + request.toString())
 		ResponseReportEnum response = ResponseReportEnum.REPORTE_GENRADO
@@ -53,6 +57,12 @@ class ReportsServiceImpl implements ReportsService{
 		return response
 	}
 
+	/**
+	 * Escribe el resultado de una consulta a un CSV
+	 * @param file Path del archivo a generar
+	 * @param result Resultado sql de la consulta
+	 * @throws Exception Error generando archivo
+	 */
 	private void generateCSV(String file, def result) throws Exception {
 		def f = new File(file)
 
@@ -64,6 +74,12 @@ class ReportsServiceImpl implements ReportsService{
 		}
 	}
 
+	/**
+	 * Escribe el resultado de una consulta a un CSV
+	 * @param file Path del archivo a generar
+	 * @param result Resultado sql de la consulta
+	 * @throws Exception Error generando archivo
+	 */
 	private void generateExcel(String file, def result)  throws Exception {
 		SXSSFWorkbook workBook = new SXSSFWorkbook();
 		workBook.setCompressTempFiles(true);
