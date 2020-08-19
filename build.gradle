@@ -4,12 +4,6 @@ plugins {
 	id 'groovy'
 	id "jacoco"
 }
-sonarqube {
-	properties {
-		property "sonar.projectName", "Reports App"
-	}
-}
-
 
 group = 'org.palina.reports'
 version = '1.0.0-SNAPSHOT'

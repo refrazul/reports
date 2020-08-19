@@ -31,7 +31,7 @@ class ConnectionServiceImpl implements ConnectioService {
 	
 	public ConnectionServiceImpl() {
 		def yamlSlurper = new YamlSlurper()
-		yaml = yamlSlurper.parseText(("/home/refrazul/reports/connections.yml" as File).text)		
+		yaml = yamlSlurper.parseText((System.getProperty("user.home") + "/reports/connections.yml" as File).text)		
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class ConnectionServiceImpl implements ConnectioService {
 						
 					def row = sql.firstRow(db.testQuery)
 					logger.info( "Conexion realizada" )
-					logger.info( row )
+					//logger.info( row )
 				}
 		
 		}catch(Exception e) {			
@@ -104,7 +104,7 @@ class ConnectionServiceImpl implements ConnectioService {
 			qryParamNames << k
 		}
 		
-		logger.info( qryParamNames )
+		logger.info( qryParamNames.toString() )
 		
 		return qryParamNames
 	}

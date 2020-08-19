@@ -40,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 import groovy.sql.Sql;
 
 @SpringBootApplication
-class ReportsApplication extends JFrame {
+public class ReportsApplication extends JFrame {
 
 	/**
 	 * 
