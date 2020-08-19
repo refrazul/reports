@@ -1,0 +1,25 @@
+connections:
+    - list:
+        name: DB Provedores
+        datasource:
+            url: jdbc:h2:mem:taedb
+            username: user
+            password: pass
+            testQuery: SELECT 1
+            driverClassName: org.h2.Driver
+    - list:
+        name: DB Clientes
+        datasource:
+            url: jdbc:postgresql://localhost:5432/genearacion_db
+            username: postgres
+            password: 1234567
+            testQuery: select 1
+            driverClassName: org.postgresql.Driver            
+    - list:
+        name: DB Transacciones
+        datasource:
+            url: jdbc:oracle:thin:@//host:1521/db
+            username: oracle
+            password: 1234567
+            testQuery: select 1 from dual
+            driverClassName: oracle.jdbc.OracleDriver            

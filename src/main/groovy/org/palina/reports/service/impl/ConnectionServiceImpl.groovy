@@ -19,14 +19,17 @@ class ConnectionServiceImpl implements ConnectioService {
 
 	private def yaml
 	
+	public ConnectionServiceImpl(String path) {
+		def yamlSlurper = new YamlSlurper()
+		yaml = yamlSlurper.parseText((path as File).text)
+	}
+	
 	public ConnectionServiceImpl() {
 		def yamlSlurper = new YamlSlurper()
 		yaml = yamlSlurper.parseText(("/home/refrazul/reports/connections.yml" as File).text)		
 	}
 	
 	public String[] getConnectionsNames() {
-		println yaml.connections.size()
-		
 		def l1 = ["Seleccionar"]
 		def l2 = yaml.connections.list.collect {
 			it.name
@@ -51,7 +54,6 @@ class ConnectionServiceImpl implements ConnectioService {
 						
 				if(db) {
 					sql = Sql.newInstance(db.url, db.user, db.password, db.driver)
-					println db.testQuery
 						
 					def row = sql.firstRow(db.testQuery)
 					println "Conexion realizada"
