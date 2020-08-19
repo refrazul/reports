@@ -8,6 +8,14 @@ connections:
             testQuery: SELECT 1
             driverClassName: org.h2.Driver
     - list:
+        name: DB Test
+        datasource:
+            url: jdbc:h2:mem:taedb;INIT=RUNSCRIPT FROM 'classpath:scripts/test-script.sql'
+            username: user
+            password: pass
+            testQuery: SELECT 1
+            driverClassName: org.h2.Driver            
+    - list:
         name: DB Clientes
         datasource:
             url: jdbc:postgresql://localhost:5432/genearacion_db

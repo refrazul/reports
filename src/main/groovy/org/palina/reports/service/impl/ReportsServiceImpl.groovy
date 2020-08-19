@@ -5,6 +5,8 @@ import groovy.sql.Sql
 import org.palina.reports.dto.ReporteDto
 import org.palina.reports.enums.ResponseReportEnum
 import org.palina.reports.service.ReportsService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 import org.apache.poi.ss.usermodel.Row
@@ -15,7 +17,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 @Service
 class ReportsServiceImpl implements ReportsService{
 
+	Logger logger = LoggerFactory.getLogger(ReportsServiceImpl.class);
+	
 	public ResponseReportEnum generateReport(ReporteDto request) {
+		logger.info("Ejecutando reporte" + request.toString())
 		ResponseReportEnum response = ResponseReportEnum.REPORTE_GENRADO
 		
 		def paramas = [:]
@@ -29,10 +34,11 @@ class ReportsServiceImpl implements ReportsService{
 			result = request?.conn.rows(request?.query?.toLowerCase(), paramas)
 		}catch(Exception e){
 			response = ResponseReportEnum.ERROR_AL_EJECUTAR_CONSULTA
+			return response
 		}
 		
 		
-		if(result.empty) {
+		if(result?.empty) {
 			response = ResponseReportEnum.NO_SE_ENCONTRARON_REGISTROS
 		}else {
 			try {

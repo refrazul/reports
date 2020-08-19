@@ -30,7 +30,7 @@ public class CoonectionServiceTest {
 	@Test
 	public void getConnections() {
 		String[] conns = connectioService.getConnectionsNames();
-		assertEquals(conns.length,4);
+		assertEquals(conns.length,5);
 		assertEquals(conns[1], "DB Provedores");
 	}
 	

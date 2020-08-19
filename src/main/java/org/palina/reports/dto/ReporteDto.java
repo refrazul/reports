@@ -42,5 +42,10 @@ public class ReporteDto {
 	public void setFile(String file) {
 		this.file = file;
 	}
+	@Override
+	public String toString() {
+		return "ReporteDto [query=" + query + ", conn=" + conn + ", params=" + params + ", type=" + type + ", file="
+				+ file + "]";
+	}
 	
 }
