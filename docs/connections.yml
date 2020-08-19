@@ -1,0 +1,9 @@
+connections:
+    - list:
+        name: DB Provedores
+        datasource:
+            url: jdbc:h2:mem:taedb
+            username: user
+            password: pass
+            testQuery: SELECT 1
+            driverClassName: org.h2.Driver
