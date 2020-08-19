@@ -24,6 +24,17 @@ class ConnectionServiceImpl implements ConnectioService {
 		yaml = yamlSlurper.parseText(("/home/refrazul/reports/connections.yml" as File).text)		
 	}
 	
+	public String[] getConnectionsNames() {
+		println yaml.connections.size()
+		
+		def l1 = ["Seleccionar"]
+		def l2 = yaml.connections.list.collect {
+			it.name
+		}
+		
+		return (l1+l2) as String[]		
+	}
+	
 	
 	public Sql getConnection(String connectionName) {
 		def db 

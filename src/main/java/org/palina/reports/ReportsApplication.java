@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 
 import java.awt.Container;
@@ -58,7 +59,8 @@ class ReportsApplication extends JFrame {
 	}
 
 	private void initUI(final ReportsService reportsService, final ConnectioService connectioService,ReporteDto reporte) {
-		String s1[] = { "Seleccionar" , "DB Provedores", "DB Clientes", "DB Transacciones"};
+		//String s1[] = { "Seleccionar" , "DB Provedores", "DB Clientes", "DB Transacciones"};
+		String s1[] = connectioService.getConnectionsNames();  
 		String s2[] = { "CSV" , "Excel"};
 		
 		Container pane = getContentPane();		
@@ -133,12 +135,29 @@ class ReportsApplication extends JFrame {
         JButton btnGenerar  = new JButton("Generar Reporte");
         gridbag.setConstraints(btnGenerar, c);
         add(btnGenerar);
+        
+        c.gridy = 16; 
+        c.gridx = 2;
+        JLabel lblMsg= new JLabel("", SwingConstants.CENTER);
+        gridbag.setConstraints(lblMsg, c);
+        add(lblMsg);
 		
 		setTitle("Reporteador");
 		setSize(500, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		/** Apaga mensjae **/
+		Runnable runnable = () -> {
+		    try {
+		    	Thread.sleep(3000);
+		    	lblMsg.setVisible(false);
+		    	lblMsg.setText("");
+		    }
+		    catch (InterruptedException e) {
+		        e.printStackTrace();
+		    }
+		};
 		
 		
 		/**Action select DB **/
@@ -150,9 +169,9 @@ class ReportsApplication extends JFrame {
 		        	  
 		        	  if(conn!= null) {
 		        		  reporte.setConn(conn);
-		        		  JOptionPane.showMessageDialog(this, "Conexion establecida con " + item, "Estatus conexión", JOptionPane.INFORMATION_MESSAGE);
+		        		  message("Conexion establecida con " + item, "Estatus conexión", JOptionPane.INFORMATION_MESSAGE);		        		  
 		        	  }else {
-		        		  JOptionPane.showMessageDialog(this, "No se puedo conectar a " + item, "Estatus conexión", JOptionPane.ERROR_MESSAGE);
+		        		  message("No se puedo conectar a " + item, "Estatus conexión", JOptionPane.ERROR_MESSAGE);		        		  
 		        	  }
 		        	  
 		          }	          
@@ -211,47 +230,51 @@ class ReportsApplication extends JFrame {
 		/** Action generate report **/
 		btnGenerar.addActionListener((ActionEvent event) -> {
 			if(reporte.getConn() == null) {
-				message("Debse serleccionar una conexión", JOptionPane.ERROR_MESSAGE );
+				message("Debe seleccionar una conexión", "Estatus reporte", JOptionPane.ERROR_MESSAGE );
 			}else if(reporte.getQuery() == null) {
-				message("Debse serleccionar el reporte a ejecutar", JOptionPane.ERROR_MESSAGE );
-			}
-			
-			Map<String,Object> params = new HashMap<String,Object>();
-			boolean generar = true;
-			
-		       for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
-		    	   if(entry.getValue().getText().length() == 0) {
-		    		   message("Ingrese el valor del parametro " + entry.getKey()  , JOptionPane.ERROR_MESSAGE );
-		    		   generar = false;
-		    		   break;
-		    	   }
-		    	   params.put(entry.getKey(), entry.getValue().getText());
-		       }
-		        	
-		       if(generar) {
-		    	   String path = FileSystemView.getFileSystemView().getHomeDirectory() + "/reports/output";
-		    	   JFileChooser jfc = new JFileChooser(path);
-		    	   jfc.setDialogTitle("Guardar reporte");   
-		    	   
-		    	   int userSelection = jfc.showSaveDialog(this);
-		    	   
-		    	   if (userSelection == JFileChooser.APPROVE_OPTION) {
-		    		   File fileToSave = jfc.getSelectedFile();
-		    		   reporte.setParams(params);
-		    		   reporte.setType((String)comboReportes.getSelectedItem());
-		    		   reporte.setFile(fileToSave.getAbsolutePath());
-		    		   reportsService.generateReport(reporte);
-		    		}
-		    	   
-				   
-		       }		    	   
-	      });
-		
+				message("Debse serleccionar el reporte a ejecutar", "Estatus reporte", JOptionPane.ERROR_MESSAGE );
+			}else {
+				Map<String,Object> params = new HashMap<String,Object>();
+				boolean generar = true;
+				
+			       for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
+			    	   if(entry.getValue().getText().length() == 0) {
+			    		   message("Ingrese el valor del parametro " + entry.getKey()  , "Estatus parametro(s)", JOptionPane.ERROR_MESSAGE );
+			    		   generar = false;
+			    		   break;
+			    	   }
+			    	   params.put(entry.getKey(), entry.getValue().getText());
+			       }
+			        	
+			       if(generar) {
+			    	   String path = FileSystemView.getFileSystemView().getHomeDirectory() + "/reports/output";
+			    	   JFileChooser jfc = new JFileChooser(path);
+			    	   jfc.setDialogTitle("Guardar reporte");   
+			    	   
+			    	   int userSelection = jfc.showSaveDialog(this);
+			    	   
+			    	   if (userSelection == JFileChooser.APPROVE_OPTION) {
+			    		   lblMsg.setVisible(true);
+			    		   lblMsg.setText("Generando reporte...");
+			    		   File fileToSave = jfc.getSelectedFile();
+			    		   reporte.setParams(params);
+			    		   reporte.setType((String)comboReportes.getSelectedItem());
+			    		   reporte.setFile(fileToSave.getAbsolutePath());
+			    		   		    		
+			    		   reportsService.generateReport(reporte);
+			    		   lblMsg.setText("Reporte generado");
+			    		   
+			    		   Thread thread = new Thread(runnable);
+			    		   thread.start();		    		   
+			    		}			    	   					   
+			       }	
+			}							    	   
+	      });		
 	}
 	
 	
-	private void message(String msg, int type) {
-		JOptionPane.showMessageDialog(this, msg, "Message", type);
+	private void message(String msg, String title, int type) {
+		JOptionPane.showMessageDialog(this, msg, title, type);
 	}
 	
 	public static void main(String[] args) {

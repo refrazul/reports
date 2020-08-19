@@ -30,8 +30,7 @@ class ReportsServiceImpl implements ReportsService{
 				f << v << ","
 			}
 			f << "\n"
-		}
-				
+		}			
 	}
 	
 }
