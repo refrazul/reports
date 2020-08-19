@@ -10,6 +10,8 @@ import org.jooq.impl.DSL
 import org.jooq.impl.DefaultConfiguration
 import org.palina.reports.dto.ConnectionDto
 import org.palina.reports.service.ConnectioService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 import groovy.yaml.YamlSlurper
@@ -17,6 +19,7 @@ import groovy.yaml.YamlSlurper
 @Service
 class ConnectionServiceImpl implements ConnectioService {
 
+	Logger logger = LoggerFactory.getLogger(ConnectionServiceImpl.class);
 	private def yaml
 	
 	public ConnectionServiceImpl(String path) {
@@ -56,8 +59,8 @@ class ConnectionServiceImpl implements ConnectioService {
 					sql = Sql.newInstance(db.url, db.user, db.password, db.driver)
 						
 					def row = sql.firstRow(db.testQuery)
-					println "Conexion realizada"
-					println row
+					logger.info( "Conexion realizada" )
+					logger.info( row )
 				}
 		
 		}catch(Exception e) {			
@@ -85,7 +88,7 @@ class ConnectionServiceImpl implements ConnectioService {
 			qryParamNames << k
 		}
 		
-		println qryParamNames
+		logger.info( qryParamNames )
 		
 		return qryParamNames
 	}

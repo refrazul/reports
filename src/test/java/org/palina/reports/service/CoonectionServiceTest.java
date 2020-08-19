@@ -45,7 +45,6 @@ public class CoonectionServiceTest {
 	public void getQuery() {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("query.sql").getFile());
-		System.out.println(file.getAbsolutePath());
 		
 		String query = connectioService.getQuery(file.getAbsolutePath());
 		assertEquals(query, "select * from tabla where id > 1000");

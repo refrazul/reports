@@ -40,7 +40,10 @@ public class ReportsServiceTest {
 	@After
 	public void shutDown() {
 		logger.debug("Borrando archivos generados");
-
+		File file = new File("salida.csv");
+		file.delete();
+		file = new File("salida.xlsx");
+		file.delete();
 	}
 	
 	@Test
@@ -52,7 +55,7 @@ public class ReportsServiceTest {
 		request.setConn(conn);
 		request.setQuery("select * from USER_APP");
 		request.setType("CSV");
-		request.setFile("salida.txt");
+		request.setFile("salida.csv");
 		request.setParams(new HashMap<String,Object>());		
 		ResponseReportEnum res = reportsService.generateReport(request);
 		conn.close();

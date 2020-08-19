@@ -30,6 +30,8 @@ import org.palina.reports.dto.ReporteDto;
 import org.palina.reports.enums.ResponseReportEnum;
 import org.palina.reports.service.ConnectioService;
 import org.palina.reports.service.ReportsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -44,7 +46,7 @@ class ReportsApplication extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	 Logger logger = LoggerFactory.getLogger(ReportsApplication.class);
 	
 	private ReportsService reportsService; 
 	private ConnectioService connectionService;
@@ -156,7 +158,7 @@ class ReportsApplication extends JFrame {
 		    	lblMsg.setText("");
 		    }
 		    catch (InterruptedException e) {
-		        e.printStackTrace();
+		    	logger.error(e.getMessage());		    	
 		    }
 		};
 		
@@ -223,7 +225,6 @@ class ReportsApplication extends JFrame {
 				}
 		           
 				panel.setLayout(new GridLayout(1,4));  
-				System.out.println("Agregados");
 			}
 
 		});
