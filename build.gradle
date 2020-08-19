@@ -18,7 +18,8 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenLocal()
-	mavenCentral()		
+	mavenCentral()	
+	maven { url "http://repo.serebryanskiy.site/"}
 }
 
 dependencies {
@@ -30,7 +31,9 @@ dependencies {
 	//Query traslator
 	implementation 'org.jooq:jooq:3.13.4'	
 	
-	
+	//Excel
+	implementation 'org.apache.poi:poi:3.16'
+	implementation 'org.apache.poi:poi-ooxml:3.16'
 	
 	//Spring boot
 	implementation 'org.springframework.boot:spring-boot-starter'
